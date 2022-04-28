@@ -34,6 +34,7 @@ public class Ejercicio2 {
                 System.out.println(keyStore.getCertificate(o));
                 Certificate certificate = keyStore.getCertificate(o);
                 certificate.getPublicKey().getAlgorithm();
+                System.out.println("Certificado: " + certificate);
                 //Algoritmo Get public
             } catch (KeyStoreException e) {
                 e.printStackTrace();
@@ -42,7 +43,7 @@ public class Ejercicio2 {
 
 
         // ii
-        KeyPair keyPair = Xifrar.randomGenerate(1024);
+        /*KeyPair keyPair = Xifrar.randomGenerate(1024);
         System.out.println(keyPair.getPrivate().getAlgorithm());
 
         String password = "password";
@@ -56,7 +57,7 @@ public class Ejercicio2 {
 
         }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
 
 
 
