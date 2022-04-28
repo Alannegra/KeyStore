@@ -2,7 +2,9 @@ package com.company;
 
 import com.company.utils.Xifrar;
 
+import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.util.ArrayList;
@@ -12,18 +14,13 @@ import java.util.Enumeration;
 public class Ejercicio2 {
     public static void main(String[] args) throws Exception {
 
+
+        // i
+
         String keystoreTerminal = "../../keystore_abril.ks";
         String keystorePassword = "usuario";
 
         KeyStore keyStore = Xifrar.loadKeyStore(keystoreTerminal,keystorePassword);
-
-
-//        Mida del magatzem (quantes claus hi ha?)
-//        Àlies de totes les claus emmagatzemades
-//        El certificat d’una de les claus
-//        L'algorisme de xifrat d’alguna de les claus
-
-        //System.out.println(new String(keystore.getBytes(), StandardCharsets.UTF_8));
 
         System.out.println(keyStore.getType());
         System.out.println(keyStore.size());
@@ -37,6 +34,24 @@ public class Ejercicio2 {
                 e.printStackTrace();
             }
         });
+
+
+        // ii
+        KeyPair keyPair = Xifrar.randomGenerate(1024);
+        System.out.println(keyPair.getPrivate().getAlgorithm());
+
+        String password = "password";
+        KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(password.toCharArray());
+        KeyStore.SecretKeyEntry entry = new KeyStore.SecretKeyEntry(keyPair.getS);
+        try{
+            KeyStore ks = Xifrar.loadKeyStore()
+            ks.setEntry("millave",entry,protParam);
+            FileOutputStream fos = new FileOutputStream();
+            ks.store(fos,);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
 
