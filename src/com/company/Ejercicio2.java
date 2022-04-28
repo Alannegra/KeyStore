@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -30,6 +31,10 @@ public class Ejercicio2 {
             System.out.println(o);
             try {
                 System.out.println(keyStore.getCertificateChain(o));
+                System.out.println(keyStore.getCertificate(o));
+                Certificate certificate = keyStore.getCertificate(o);
+                certificate.getPublicKey().getAlgorithm();
+                //Algoritmo Get public
             } catch (KeyStoreException e) {
                 e.printStackTrace();
             }
