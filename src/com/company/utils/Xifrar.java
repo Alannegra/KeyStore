@@ -5,6 +5,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.*;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
 public class Xifrar {
@@ -110,6 +112,44 @@ public class Xifrar {
         }
         return ks;
     }
+
+    public static PublicKey getPublicKey(String x509File){
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(x509File);
+            CertificateFactory factory = CertificateFactory.getInstance("X.509");
+            X509Certificate certificate = (X509Certificate)factory.generateCertificate(in);
+
+            return certificate.getPublicKey();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to get public key", e);
+        }
+    }
+
+    public static PublicKey getPublicKey(KeyStore ks, String alias, String pwMyKey) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException {
+        Key key = ks.getKey(alias,pwMyKey.toCharArray());
+
+        X509Certificate certificate = (X509Certificate)ks.getCertificate(alias);
+
+        PublicKey publicKey = certificate.getPublicKey();
+
+        return  publicKey;
+    }
+
+    public static byte[] signData(byte[] data, PrivateKey priv) {
+        byte[] signature = null;
+
+        try {
+            Signature signer = Signature.getInstance("SHA1withRSA");
+            signer.initSign(priv);
+            signer.update(data);
+            signature = signer.sign();
+        } catch (Exception ex) {
+            System.err.println("Error signant les dades: " + ex);
+        }
+        return signature;
+    }
+
 
 
 }

@@ -2,6 +2,8 @@ package com.company;
 
 import com.company.utils.Xifrar;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
@@ -19,9 +21,10 @@ public class Ejercicio2 {
         // i
 
         String keystoreTerminal = "../../keystore_abril.ks";
+        String keystoreTerminal2 = "../../keystore_abril2.ks";
         String keystorePassword = "usuario";
 
-        KeyStore keyStore = Xifrar.loadKeyStore(keystoreTerminal,keystorePassword);
+        KeyStore keyStore = Xifrar.loadKeyStore(keystoreTerminal2,keystorePassword);
 
         System.out.println(keyStore.getType());
         System.out.println(keyStore.size());
@@ -41,26 +44,43 @@ public class Ejercicio2 {
             }
         });
 
-
+        System.out.println("Ejercicio 2 ii ------------------------------------------------");
         // ii
-        /*KeyPair keyPair = Xifrar.randomGenerate(1024);
-        System.out.println(keyPair.getPrivate().getAlgorithm());
+
 
         String password = "password";
         KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(password.toCharArray());
-        KeyStore.SecretKeyEntry entry = new KeyStore.SecretKeyEntry(keyPair.getS);
+        SecretKey secretKey = Xifrar.keygenKeyGeneration(256);
+
+        KeyStore.SecretKeyEntry entry = new KeyStore.SecretKeyEntry(secretKey);
+
         try{
-            KeyStore ks = Xifrar.loadKeyStore()
+            KeyStore ks = Xifrar.loadKeyStore(keystoreTerminal,keystorePassword);
             ks.setEntry("millave",entry,protParam);
-            FileOutputStream fos = new FileOutputStream();
-            ks.store(fos,);
+            FileOutputStream fos = new FileOutputStream(keystoreTerminal);
+            ks.store(fos,keystorePassword.toCharArray());
 
         }catch (Exception e){
             e.printStackTrace();
-        }*/
+        }
 
+        System.out.println("Ejercicio 3  ------------------------------------------------");
 
+        System.out.println(Xifrar.getPublicKey("jordi.cer"));
 
+        KeyPair keyPair = Xifrar.randomGenerate(1024);
+
+        System.out.println(keyPair.getPrivate().getAlgorithm());
+
+        System.out.println("Ejercicio 4  ------------------------------------------------");
+
+        System.out.println(Xifrar.getPublicKey(keyStore,"millave3","usuario"));
+
+        System.out.println("Ejercicio 5  ------------------------------------------------");
+
+        byte[] arraybyte = "Hola".getBytes(StandardCharsets.UTF_8);
+
+        System.out.println(new String(Xifrar.signData(arraybyte, keyPair.getPrivate())));
 
 
     }
