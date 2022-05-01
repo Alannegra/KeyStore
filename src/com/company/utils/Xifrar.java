@@ -150,6 +150,58 @@ public class Xifrar {
         return signature;
     }
 
+    public static boolean validateSignature(byte[] data, byte[] signature, PublicKey pub) {
+        boolean isValid = false;
+        try {
+            Signature signer = Signature.getInstance("SHA1withRSA");
+            signer.initVerify(pub);
+            signer.update(data);
+            isValid = signer.verify(signature);
+        } catch (Exception ex) {
+            System.err.println("Error validant les dades: " + ex);
+        }
+        return isValid;
+    }
+
+    public static byte[][] encryptWrappedData(byte[] data, PublicKey pub) {
+        byte[][] encWrappedData = new byte[2][];
+        try {
+            KeyGenerator kgen = KeyGenerator.getInstance("AES");
+            kgen.init(128);
+            //Generació de clau (Clau simètrica)
+            SecretKey sKey = kgen.generateKey();
+            //Algorisme de xifrat asimètric
+            Cipher cipher = Cipher.getInstance("AES");
+            //Clau xifrada
+            cipher.init(Cipher.ENCRYPT_MODE, sKey);
+            byte[] encMsg = cipher.doFinal(data);
+            cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.WRAP_MODE, pub);
+            byte[] encKey = cipher.wrap(sKey);
+            encWrappedData[0] = encMsg;
+            encWrappedData[1] = encKey;
+        } catch (Exception  ex) {
+            System.err.println("Ha succeït un error xifrant: " + ex);
+        }
+        return encWrappedData;
+    }
+
+    public static byte[] decryptWrappedData(byte[] encryptedMessage, PrivateKey privateKey,byte[] encryptedKey) {
+        try {
+            //Algorisme de xifrat asimètric
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "SunJCE");
+            cipher.init(Cipher.UNWRAP_MODE, privateKey);
+            //Clau simètrica
+            Key symmetricKey = cipher.unwrap(encryptedKey, "AES", Cipher.SECRET_KEY);
+            cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, symmetricKey);
+            return cipher.doFinal(encryptedMessage);
+        } catch (GeneralSecurityException exception) {
+            exception.printStackTrace();
+            return null;
+        }
+
+    }
 
 
-}
+    }

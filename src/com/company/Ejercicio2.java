@@ -82,6 +82,12 @@ public class Ejercicio2 {
 
         System.out.println(new String(Xifrar.signData(arraybyte, keyPair.getPrivate())));
 
+        System.out.println("Ejercicio 6  ------------------------------------------------");
+
+        byte [] signat = Xifrar.signData(arraybyte, keyPair.getPrivate());
+
+        System.out.println(Xifrar.validateSignature(arraybyte,signat,keyPair.getPublic()));
+
 
     }
 }
